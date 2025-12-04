@@ -9,13 +9,14 @@ export class Jugadores {
     vida = 100;
     vidaMaxima = 100;
     inventario = [];
-
+    dinero = 0;
     constructor(nombre) {
         this.nombre = nombre;
         this.puntos = 0;
         this.vida = this.vidaMaxima;
         this.vidaMaxima = 100;
         this.inventario = [];
+        this.dinero = 0;
         
     }
 
@@ -38,6 +39,9 @@ export class Jugadores {
      */
     sumarPuntos(puntos) {
         this.puntos += puntos;
+    }
+    sumarDinero(dinero) {
+        this.dinero += dinero;
     }
 
     /**
@@ -112,6 +116,7 @@ export class Jugadores {
         return {
             nombre: this.nombre,
             puntos: this.puntos,
+            dinero: this.dinero,
             vida: this.vida, // Añadir vida actual
             vidaMaxima: this.vidaMaxima,
             ataque: this.ataqueTotal(),

@@ -114,18 +114,21 @@ function batalla(player, enemy) {
 		if (enemyLife <= 0 && playerLife > 0) {
 			ganador = 'player';
 			var puntosGanados = 30;
+			var dineroGanado = 5;
 			if (enemy && enemy.nombre) {
 				var ename = String(enemy.nombre).toLowerCase();
-				if (ename.indexOf('orco') !== -1) puntosGanados = 60;
-				else if (ename.indexOf('demonio') !== -1) puntosGanados = 100;
-				else if (ename.indexOf('drag') !== -1 || ename.indexOf('dragon') !== -1 || ename.indexOf('dragón') !== -1) puntosGanados = 200;
+				if (ename.indexOf('orco') !== -1) puntosGanados = 60, dineroGanado = 5;
+				else if (ename.indexOf('demonio') !== -1) puntosGanados = 10;
+				else if (ename.indexOf('drag') !== -1 || ename.indexOf('dragon') !== -1 || ename.indexOf('dragón') !== -1) puntosGanados = 200, dineroGanado = 10;
 			}
 			if (typeof player.sumarPuntos === 'function') player.sumarPuntos(puntosGanados);
 			else player.puntos = (player.puntos || 0) + puntosGanados;
+			if (typeof player.sumarDinero === 'function') player.sumarDinero(dineroGanado);
+			else player.dinero = (player.dinero || 0) + dineroGanado;
 			player.victorias = (player.victorias || 0) + 1;
 			player.vida = Math.max(0, playerLife);
 			if (typeof enemy.puntosvida !== 'undefined') enemy.puntosvida = Math.max(0, enemyLife);
-			detalle += ` -- Resultado: GANA JUGADOR (+${puntosGanados} pts)`;
+			detalle += ` -- Resultado: GANA JUGADOR (+${puntosGanados} pts y +${dineroGanado}) €`;
 			return { ganador, detalle };
 		}
 
@@ -156,13 +159,14 @@ function categorizePlayers(players = [], currentRanking = []) {
 	for (var i = 0; i < players.length; i++) {
 		var p = players[i];
 		var puntos = (p && p.puntos) ? p.puntos : 0;
+		var dinero = (p && p.dinero) ? p.dinero : 0;
 		var categoria = 'rookie';
 		if (!hayRankingPrevio && i === 0) {
 			categoria = 'pro';
 		} else if (puntos >= umbralPro) {
 			categoria = 'pro';
 		}
-		resultado.push({ nombre: (p && p.nombre) ? p.nombre : ('Jugador' + (i + 1)), puntos: puntos, categoria: categoria });
+		resultado.push({ nombre: (p && p.nombre) ? p.nombre : ('Jugador' + (i + 1)), puntos: puntos, dinero : dinero, categoria: categoria });
 	}
 	return resultado;
 }
@@ -188,6 +192,7 @@ function mostrarRanking(players = []) {
 			Pos: i + 1,
 			Nombre: (p && p.nombre) ? p.nombre : ('Jugador' + (i + 1)),
 			Puntos: (p && p.puntos) ? p.puntos : 0,
+			Dinero: (p && p.dinero) ? p.dinero : 0,
 			Victorias: (p && p.victorias) ? p.victorias : 0,
 			Ataque: (p && typeof p.ataqueTotal === 'function') ? p.ataqueTotal() : ((p && p.nivelataque) ? p.nivelataque : 0),
 			Defensa: (p && typeof p.defensaTotal === 'function') ? p.defensaTotal() : ((p && p.defensa) ? p.defensa : 0)
@@ -218,7 +223,8 @@ function mostrarReporteCompleto(rounds = [], players = []) {
 			var eName = c.enemyName || 'Enemigo';
 			var g = c.ganador || 'desconocido';
 			var pts = (typeof c.puntosGanados === 'number') ? (' | +' + c.puntosGanados + ' pts') : '';
-			console.log('  - ' + pName + ' vs ' + eName + ' -> ganador: ' + g + pts);
+			var dn = (typeof c.dineroGanado === 'number') ? (' | +' + c.dineroGanado + ' €') : '';
+			console.log('  - ' + pName + ' vs ' + eName + ' -> ganador: ' + g + pts + dn);
 		}
 	}
 
@@ -245,6 +251,7 @@ function mostrarReporteCompleto(rounds = [], players = []) {
 		var nombre = (jugador && jugador.nombre) ? jugador.nombre : 'Jugador';
 		var vidaStr = (jugador && typeof jugador.vida !== 'undefined') ? (jugador.vida + '/' + (jugador.vidaMaxima || 100)) : 'N/A';
 		var puntos = (jugador && jugador.puntos) ? jugador.puntos : 0;
+		var dinero = (jugador && jugador.dinero) ? jugador.dinero : 0;
 		var ataque = (jugador && typeof jugador.ataqueTotal === 'function') ? jugador.ataqueTotal() : ((jugador && jugador.nivelataque) ? jugador.nivelataque : 0);
 		var defensa = (jugador && typeof jugador.defensaTotal === 'function') ? jugador.defensaTotal() : ((jugador && jugador.defensa) ? jugador.defensa : 0);
 		var inventario = 'Sin inventario';
@@ -261,6 +268,7 @@ function mostrarReporteCompleto(rounds = [], players = []) {
 		console.log(' ' + nombre);
 		console.log(' Vida: ' + vidaStr);
 		console.log(' Puntos: ' + puntos);
+		console.log(' Dinero:  ' + dinero);
 		console.log(' Ataque total: ' + ataque);
 		console.log(' Defensa total: ' + defensa);
 		console.log(' Inventario: ' + inventario);

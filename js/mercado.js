@@ -5,14 +5,14 @@ export class Mercado {
      * Crea un nuevo mercado con una lista de productos.
      */
     listaProductos = [
-        new Producto("Espada Basica", 500, "Comun", "arma", { ataque: 5 }),
-        new Producto("Espada Normal", 1000, "Rara", "arma", { ataque: 10 }),
-        new Producto("Armadura Ligera", 750, "Rara", "armadura", { defensa: 10 }),
-        new Producto("Pocion de vida", 200, "Comun", "consumible", { curacion: 50 }),
-        new Producto("Revivir", 400, "Raro", "consumible", { curacion: 100 }),
-        new Producto("Hacha", 1200, "Epico", "arma", { ataque: 15 }),
-        new Producto("Escudo Antiguo", 900, "Epico", "armadura", { defensa: 20 }),
-        new Producto("Escudo Legendario", 2000, "Legendario", "armadura", { defensa: 40 })
+        new Producto("Espada Basica", 30, "Común", "arma", { ataque: 5 }),
+        new Producto("Espada Normal", 60, "Raro", "arma", { ataque: 10 }),
+        new Producto("Armadura Ligera", 100, "Raro", "armadura", { defensa: 10 }),
+        new Producto("Pocion de vida", 30, "Común", "consumible", { curacion: 50 }),
+        new Producto("Revivir", 100, "Raro", "consumible", { curacion: 100 }),
+        new Producto("Hacha", 200, "Épico", "arma", { ataque: 15 }),
+        new Producto("Escudo Antiguo", 200, "Épico", "armadura", { defensa: 20 }),
+        new Producto("Escudo Legendario", 400, "Legendario", "armadura", { defensa: 40 })
     ];
 
     // Guardar precios originales para poder resetear descuentos

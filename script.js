@@ -54,6 +54,7 @@ function rebuildProductsFromMercado() {
 }
 rebuildProductsFromMercado();
 
+
 /**
  * Aplica un 20% de descuento a un producto aleatorio del mercado
  * y vuelve a renderizar la tienda para que se vea el nuevo precio.
@@ -73,16 +74,16 @@ function applyRandomDiscount20() {
     updateUI();
 
     try {
-        alert('Se aplicó un 20% de descuento a: ' + producto.nombre + ' (nuevo precio: ' + (producto.precio / 100).toFixed(2) + '€)');
+        alert('Se aplicó un 20% de descuento a: ' + producto.nombre + ' (nuevo precio: ' + (producto.precio).toFixed(2) + '€)');
     } catch (e) {
         console.log('Descuento aplicado a:', producto.nombre, 'nuevo precio:', producto.precio);
     }
 }
 
 // Estado del juego
-var initialMoney = 3000; // céntimos
+var dineros = 500;
 var gameState = {
-    money: initialMoney,
+    money: dineros,
     selectedProducts: [],
     purchasedProducts: [],
 };
@@ -158,6 +159,7 @@ window.addEventListener('load', () => {
     initializeInventory();
     updateUI();
 
+
     var toShopBtn = document.getElementById('to-shop-btn');
     if (toShopBtn) {
         toShopBtn.onclick = function() {
@@ -228,7 +230,16 @@ function initializeShop() {
                 bonusHtml = String(product.bonus);
             }
 
-            productElement.innerHTML = '\n                <img src="' + product.image + '" alt="' + product.name + '" class="product-img">\n                <div class="product-name">' + product.name + '</div>\n                <div class="product-rareza">' + product.rareza + '</div>\n                <div class="product-price">' + (product.price / 100).toFixed(2) + '€</div>\n                <div class="product-bonus">' + bonusHtml + '</div>\n                <div style="margin-top:8px;">\n                    <button class="btn add-btn">' + (gameState.selectedProducts.indexOf(product.id) !== -1 ? 'Retirar' : 'Añadir') + '</button>\n                </div>\n            ';
+            var btnText = gameState.selectedProducts.indexOf(product.id) !== -1 ? 'Retirar' : 'Añadir';
+            productElement.innerHTML = 
+                '<img src="' + product.image + '" alt="' + product.name + '" class="product-img">' +
+                '<div class="product-name">' + product.name + '</div>' +
+                '<div class="product-rareza">' + product.rareza + '</div>' +
+                '<div class="product-price">' + (product.price).toFixed(2) + '€</div>' +
+                '<div class="product-bonus">' + bonusHtml + '</div>' +
+                '<div style="margin-top:8px;">' +
+                '<button class="btn add-btn">' + btnText + '</button>' +
+                '</div>';
 
             // boton de añadir/retirar
             (function(prod, elem){
@@ -325,7 +336,7 @@ function canAffordProduct(price) {
  * Llama a funciones auxiliares para mantener la UI sincronizada con `gameState`.
  */
 function updateUI() {
-    document.getElementById('money-amount').textContent = `${(gameState.money / 100).toFixed(2)}€`;
+    document.getElementById('money-amount').textContent = `${(gameState.money).toFixed(2)}€`;
     // Calcular total seleccionado
     var totalSelectedPrice = 0;
     for (var i = 0; i < gameState.selectedProducts.length; i++) {
@@ -374,7 +385,10 @@ function resetSelection() {
  */
 function processPurchase() {
     if (gameState.selectedProducts.length === 0) return;
-    
+    // // Preguntar confirmación
+    // if (!confirm("¿Seguro que quieres comprar?")) {
+    //     return; // El usuario dijo NO
+    // }
     // REDUCE: suma todos los precios seleccionados
     const totalPrice = gameState.selectedProducts.reduce((total, id) => {
         const product = products.find(p => p.id === id);
@@ -464,6 +478,7 @@ function updateStatsDisplay() {
             <p>Ataque: ${stats.ataque}</p>
             <p>Defensa: ${stats.defensa}</p>
             <p>Puntos: ${stats.puntos}</p>
+            <p>Dinero: ${gameState.money}</p>
             <p>Inventario: ${player.inventario.length} objetos</p>
         `;
     }
@@ -486,28 +501,29 @@ function updateStatsDisplay() {
     const def1 = document.getElementById('stat-defense-1');
     const life1 = document.getElementById('stat-life-1');
     const pts1 = document.getElementById('stat-points-1');
-
+    const dn1 = document.getElementById('stat-dinero-1');
     const atk3 = document.getElementById('stat-attack-3');
     const def3 = document.getElementById('stat-defense-3');
     const life3 = document.getElementById('stat-life-3');
     const pts3 = document.getElementById('stat-points-3');
-
+    const dn3 = document.getElementById('stat-dinero-3')
     if (atk1) atk1.textContent = stats.ataque;
     if (def1) def1.textContent = stats.defensa;
     if (life1) life1.textContent = `${stats.vida}/${stats.vidaMaxima}`;
     if (pts1) pts1.textContent = stats.puntos;
-
+    if (dn3) dn3.textContent = gameState.money;
     if (atk3) atk3.textContent = stats.ataque;
     if (def3) def3.textContent = stats.defensa;
     if (life3) life3.textContent = `${stats.vida}/${stats.vidaMaxima}`;
     if (pts3) pts3.textContent = stats.puntos;
-
+    if (dn3) dn3.textContent = stats.dinero + gameState.money;
     // final info
     const finalName = document.getElementById('final-player-name');
     const finalPoints = document.getElementById('final-points');
+    const finalDinero = document.getElementById('final-dinero');
     if (finalName) finalName.textContent = player.nombre;
     if (finalPoints) finalPoints.textContent = player.puntos;
-
+    if (finalDinero) finalDinero.textContent = stats.dinero + gameState.money;
     // Mostrar categoría final (PRO / ROOKIE) en la escena final si existe el elemento
     const finalCategoryEl = document.getElementById('final-player-category');
     if (finalCategoryEl) {
@@ -645,6 +661,7 @@ function fight() {
     const resultMessage = document.getElementById('battle-result'); // opcional
     const winnerElement = document.getElementById('battle-winner');
     const battlePointsEl = document.getElementById('battle-points');
+    const dineroPoints = document.getElementById('battle-money');
 
     // Mostrar resultado y ganador
     if (resultado.ganador === 'player') {
@@ -654,7 +671,7 @@ function fight() {
         }
         if (winnerElement) winnerElement.textContent = `Ganador: ${player.nombre}`;
         if (battlePointsEl) battlePointsEl.textContent = player.puntos || 0;
-
+        if (dineroPoints) dineroPoints.textContent = player.dinero + gameState.money || 0;
         // Desactivar botón de lucha y avanzar al siguiente enemigo
         document.getElementById('fight-btn').disabled = true;
         currentEnemyIndex++;
@@ -670,7 +687,7 @@ function fight() {
         }
         if (winnerElement) winnerElement.textContent = `Ganador: ${selectedEnemy.nombre}`;
         if (battlePointsEl) battlePointsEl.textContent = player.puntos || 0;
-
+        if (dineroPoints) dineroPoints.textContent = stats.dinero + gameState.money || 0;
         setTimeout(() => { 
             showScene('scene-6'); 
             updateStatsDisplay(); 
@@ -683,7 +700,7 @@ function fight() {
         }
         if (winnerElement) winnerElement.textContent = 'Ganador: Empate';
         if (battlePointsEl) battlePointsEl.textContent = player.puntos || 0;
-        
+        if (dineroPoints) dineroPoints.textContent = stats.dinero + gameState.money || 0;
         // En caso de empate, avanzar al siguiente enemigo después de un tiempo
         document.getElementById('fight-btn').disabled = true;
         currentEnemyIndex++;
@@ -705,7 +722,7 @@ function fight() {
  * @returns {void}
  */
 function restartGame() {
-    gameState.money = initialMoney;
+    gameState.money = dineros;
     gameState.selectedProducts = [];
     gameState.purchasedProducts = [];
     

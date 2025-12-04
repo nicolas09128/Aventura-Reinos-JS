@@ -29,6 +29,7 @@
           <div class="stats-card"><p><span class="stat-label">⚔️ Ataque:</span> <span id="stat-attack-1">50</span></p></div>
           <div class="stats-card"><p><span class="stat-label">🛡️ Defensa:</span> <span id="stat-defense-1">0</span></p></div>
           <div class="stats-card"><p><span class="stat-label">❤️ Vida:</span> <span id="stat-life-1">100</span></p></div>
+          <div class="stats-card"><p><span class="stat-label">💴 Dinero:</span> <span id="stat-dinero-1">500</span></p></div>
         </div>
         <div class="row-3">
           <button class="btn btn-hero" id="to-shop-btn">Ingresar a la Tienda</button>
@@ -40,7 +41,7 @@
     <section id="scene-2" class="scene" style="display:none;">
       <h2 class="scene-title">Tienda</h2>
       <div class="money-display">
-        Dinero disponible: <span class="money-amount" id="money-amount">30.00€</span>
+        Dinero disponible: <span class="money-amount" id="money-amount">500€</span>
       </div>
       <div class="shop-container" id="shop-container"></div>
       <div class="actions">
@@ -64,6 +65,7 @@
           <div class="stats"><p>Defensa: <span id="stat-defense-3">0</span></p></div>
           <div class="stats"><p>Vida: <span id="stat-life-3">100</span></p></div>
           <div class="stats"><p>Puntos: <span id="stat-points-3">0</span></p></div>
+          <div class="stats"><p>Dinero: <span id="stat-dinero-3">0</span></p></div>
         </div>
         <div class="row-4">
           <h3>Inventario</h3>
@@ -98,6 +100,7 @@
         <div id="battle-center" style="text-align:center; min-width:200px;">
           <h3 id="battle-winner">Ganador: -</h3>
           <p>Puntos: <span id="battle-points">0</span></p>
+          <p>Dinero: <span id="battle-money">0</span></p>
           <p id="battle-counter" style="font-size: 0.9rem; color: #ffcc00;">Enemigo 1/3</p>
           <div style="margin-top:10px;">
             <button class="btn" id="fight-btn">Luchar</button>
@@ -118,6 +121,7 @@
       <span id="final-player-category" style="font-weight: bolder;"></span>
       <p>Jugador: <strong id="final-player-name">Atreus</strong></p>
       <p>Puntos finales: <strong id="final-points">0</strong></p>
+      <p>Dinero final: <strong id="final-dinero">0</strong></p>
       <div class="actions" style="margin-top:20px;">
         <button class="btn" id="restart-btn">Reiniciar Juego</button>
       </div>
