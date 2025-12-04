@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: js/Jugadores.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: js/Jugadores.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Clase que representa al jugador.
+ * Contiene nombre, puntos, vida, inventario y métodos para calcular stats.
+ * Se diseñó para ser fácil de usar desde el script principal.
+ */
+export class Jugadores {
+    nombre;
+    puntos = 0;
+    vida = 100;
+    vidaMaxima = 100;
+    inventario = [];
+
+    constructor(nombre) {
+        this.nombre = nombre;
+        this.puntos = 0;
+        this.vida = this.vidaMaxima;
+        this.vidaMaxima = 100;
+        this.inventario = [];
+        
+    }
+
+    /**
+     * Añade un objeto al inventario. Se guarda una copia para evitar referencias.
+     * @param {Object} objeto - Objeto del mercado (nombre, tipo, bonus, etc.)
+     */
+    anadirObjeto(objeto) {
+        // SPREAD OPERATOR: {...objeto} crea una COPIA del objeto (no la referencia original)
+        // Esto evita que cambios posteriores al objeto afecten al inventario
+        const objetoClone = {
+            ...objeto
+        };
+        this.inventario.push(objetoClone);
+    }
+
+    /**
+     * Suma puntos al jugador.
+     * @param {number} puntos - Cantidad de puntos a sumar.
+     */
+    sumarPuntos(puntos) {
+        this.puntos += puntos;
+    }
+
+    /**
+     * Calcula y devuelve el ataque total del jugador sumando todas las armas.
+     * @returns {number} Valor total de ataque.
+     */
+    ataqueTotal() {
+        var miAtaque = 0;
+        for (var i = 0; i &lt; this.inventario.length; i++) {
+            var objeto = this.inventario[i];
+            if (!objeto) continue;
+            if (objeto.tipo === 'arma') {
+                var base = objeto.ataque ? objeto.ataque : 0;
+                var bonus = 0;
+                if (objeto.bonus &amp;&amp; typeof objeto.bonus === 'object' &amp;&amp; objeto.bonus.ataque) {
+                    bonus = objeto.bonus.ataque;
+                }
+                miAtaque = miAtaque + base + bonus;
+            }
+        }
+        return miAtaque;
+    }
+
+    /**
+     * Calcula y devuelve la defensa total del jugador sumando todas las armaduras.
+     * @returns {number} Valor total de defensa.
+     */
+    defensaTotal() {
+        var miDefensa = 0;
+        for (var i = 0; i &lt; this.inventario.length; i++) {
+            var objeto = this.inventario[i];
+            if (!objeto) continue;
+            if (objeto.tipo === 'armadura') {
+                var baseD = objeto.defensa ? objeto.defensa : 0;
+                var bonusD = 0;
+                if (objeto.bonus &amp;&amp; typeof objeto.bonus === 'object' &amp;&amp; objeto.bonus.defensa) {
+                    bonusD = objeto.bonus.defensa;
+                }
+                miDefensa = miDefensa + baseD + bonusD;
+            }
+        }
+        return miDefensa;
+    }
+
+    /**
+     * Agrupa el inventario por tipo y devuelve un objeto con arrays por tipo.
+     * Ejemplo: { arma: [...], armadura: [...], consumible: [...] }
+     * @returns {Object&lt;string, Array>} Grupos de inventario por tipo.
+     */
+    inventarioPorTipo() {
+        // OBJETO VACÍO: {} sirve como contenedor para los grupos
+        const grupos = {};
+        
+        // Recorro cada objeto del inventario
+        for (let objeto of this.inventario) {
+            // Si no existe todavía un grupo para este tipo, lo CREO como array vacío
+            if (!grupos[objeto.tipo]) {
+                grupos[objeto.tipo] = [];
+            }
+            // ACCESO DINÁMICO: grupos[objeto.tipo] accede a la propiedad con el nombre del tipo
+            // Ejemplo: grupos['arma'].push(objeto) => agrupa todas las armas en un array
+            grupos[objeto.tipo].push(objeto);
+        }
+        
+        return grupos;
+    }
+    /**
+     * Devuelve un objeto con la información principal del jugador para mostrar en UI.
+     * @returns {Object} Datos del jugador (nombre, puntos, vida, ataque, defensa, inventario).
+     */
+    mostrar() {
+        return {
+            nombre: this.nombre,
+            puntos: this.puntos,
+            vida: this.vida, // Añadir vida actual
+            vidaMaxima: this.vidaMaxima,
+            ataque: this.ataqueTotal(),
+            defensa: this.defensaTotal(),
+            inventario: this.inventarioPorTipo()
+        };
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Jugadores.html">Jugadores</a></li><li><a href="Producto_Producto.html">Producto</a></li></ul><h3>Global</h3><ul><li><a href="global.html#applyRandomDiscount20">applyRandomDiscount20</a></li><li><a href="global.html#batalla">batalla</a></li><li><a href="global.html#canAffordProduct">canAffordProduct</a></li><li><a href="global.html#categorizePlayers">categorizePlayers</a></li><li><a href="global.html#fight">fight</a></li><li><a href="global.html#getEnemyImage">getEnemyImage</a></li><li><a href="global.html#getProductImage">getProductImage</a></li><li><a href="global.html#initializeInventory">initializeInventory</a></li><li><a href="global.html#initializeShop">initializeShop</a></li><li><a href="global.html#launchPoopEmojis">launchPoopEmojis</a></li><li><a href="global.html#loadNextEnemy">loadNextEnemy</a></li><li><a href="global.html#mostrarRanking">mostrarRanking</a></li><li><a href="global.html#mostrarReporteCompleto">mostrarReporteCompleto</a></li><li><a href="global.html#populateEnemySelector">populateEnemySelector</a></li><li><a href="global.html#processPurchase">processPurchase</a></li><li><a href="global.html#resetSelection">resetSelection</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setBattleEnemy">setBattleEnemy</a></li><li><a href="global.html#showScene">showScene</a></li><li><a href="global.html#startBattleSequence">startBattleSequence</a></li><li><a href="global.html#toggleProductSelection">toggleProductSelection</a></li><li><a href="global.html#updateInventoryDisplay">updateInventoryDisplay</a></li><li><a href="global.html#updateInventoryInContainer">updateInventoryInContainer</a></li><li><a href="global.html#updateUI">updateUI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 11:05:54 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='styles.css'>
+    <title>Aventura-Reino</title>
+    <!-- Cargar el script principal como módulo. Las dependencias se importan desde `script.js` -->
+    <script type="module" src="script.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1 id="title">Aventura en el Reino de JS</h1>
+  </header>
+
+  <main>
+    <!-- Escena 1: Perfil inicial del jugador -->
+    <section id="scene-1" class="scene">
+      <div id="scene-1-container">
+        <h2 class="scene-title" style="margin-bottom: 30px;">¡Bienvenido, Aventurero!</h2>
+        <div class="row-1">
+          <div class="img-container">
+            <img id="player-image-1" src="img/p1.png" alt="jugador" class="hero-image">
+          </div>
+          <p id="player-name-1" class="hero-name">Nombre personaje: Atreus</p>
+        </div>
+        <div class="row-2">
+          <div class="stats-card"><p><span class="stat-label">⚔️ Ataque:</span> <span id="stat-attack-1">50</span></p></div>
+          <div class="stats-card"><p><span class="stat-label">🛡️ Defensa:</span> <span id="stat-defense-1">0</span></p></div>
+          <div class="stats-card"><p><span class="stat-label">❤️ Vida:</span> <span id="stat-life-1">100</span></p></div>
+        </div>
+        <div class="row-3">
+          <button class="btn btn-hero" id="to-shop-btn">Ingresar a la Tienda</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Escena 2: Tienda / Mercado -->
+    <section id="scene-2" class="scene" style="display:none;">
+      <h2 class="scene-title">Tienda</h2>
+      <div class="money-display">
+        Dinero disponible: <span class="money-amount" id="money-amount">30.00€</span>
+      </div>
+      <div class="shop-container" id="shop-container"></div>
+      <div class="actions">
+        <button class="btn btn-reset" id="reset-btn">Reiniciar Selección</button>
+        <button class="btn btn-buy" id="buy-btn" disabled>Comprar</button>
+        <button class="btn" id="shop-continue-btn">Continuar</button>
+      </div>
+    </section>
+
+    <!-- Escena 3: Perfil con inventario y estadísticas actualizadas -->
+    <section id="scene-3" class="scene" style="display:none;">
+      <div id="scene-3-container">
+        <div class="row-1">
+          <div class="img-container">
+            <img id="player-image-3" src="img/p1.png" alt="jugador">
+          </div>
+          <p id="player-name-3">Nombre personaje: Atreus</p>
+        </div>
+        <div class="row-2">
+          <div class="stats"><p>Ataque: <span id="stat-attack-3">50</span></p></div>
+          <div class="stats"><p>Defensa: <span id="stat-defense-3">0</span></p></div>
+          <div class="stats"><p>Vida: <span id="stat-life-3">100</span></p></div>
+          <div class="stats"><p>Puntos: <span id="stat-points-3">0</span></p></div>
+        </div>
+        <div class="row-4">
+          <h3>Inventario</h3>
+          <footer id="inventory-container"></footer>
+        </div>
+        <div class="row-5">
+          <button class="btn" id="to-battle-btn">Comenzar Batallas</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Escena 4: Selector de enemigos -->
+    <section id="scene-4" class="scene" style="display:none;">
+      <h2 class="scene-title">Elige tus Enemigos</h2>
+      <p style="text-align:center; margin-bottom: 30px; font-size: 1.1rem;">
+        Aquí se mostrarán los enemigos disponibles. Las batallas serán contra 3 enemigos seleccionados aleatoriamente.
+      </p>
+      <div class="enemy-selector" id="enemy-selector"></div>
+      <div class="actions">
+        <button class="btn" id="scene-4-continue-btn">Continuar a Batallas</button>
+        <button class="btn" id="scene-4-back-btn">Volver</button>
+      </div>
+    </section>
+
+    <!-- Escena 5: Batalla automática contra 3 enemigos -->
+    <section id="scene-5" class="scene" style="display:none;">
+      <div id="battle-area" style="display:flex; gap:20px; align-items:center; justify-content:space-around;">
+        <div id="player-battle" style="text-align:center; min-width:200px;">
+          <img id="player-image-battle" src="img/p1.png" alt="jugador">
+          <p id="player-name-battle">Atreus</p>
+        </div>
+        <div id="battle-center" style="text-align:center; min-width:200px;">
+          <h3 id="battle-winner">Ganador: -</h3>
+          <p>Puntos: <span id="battle-points">0</span></p>
+          <p id="battle-counter" style="font-size: 0.9rem; color: #ffcc00;">Enemigo 1/3</p>
+          <div style="margin-top:10px;">
+            <button class="btn" id="fight-btn">Luchar</button>
+            <button class="btn" id="back-to-menu-btn">Volver al Menú</button>
+          </div>
+        </div>
+        <div id="enemy-battle" style="text-align:center; min-width:200px;">
+          <img id="enemy-image-battle" src="img/Demonio.jpg" alt="enemigo">
+          <p id="enemy-name-battle">Enemigo</p>
+        </div>
+      </div>
+      <footer id="battle-inventory-container" style="margin-top: 20px;"></footer>
+    </section>
+
+    <!-- Escena 6: Resultados finales -->
+    <section id="scene-6" class="scene" style="display:none; text-align:center;">
+      <h2>Fin del juego</h2>
+      <span id="final-player-category" style="font-weight: bolder;"></span>
+      <p>Jugador: <strong id="final-player-name">Atreus</strong></p>
+      <p>Puntos finales: <strong id="final-points">0</strong></p>
+      <div class="actions" style="margin-top:20px;">
+        <button class="btn" id="restart-btn">Reiniciar Juego</button>
+      </div>
+    </section>
+
+  </main>
+</main>
+
+  <!-- canvas-confetti para animación final -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</body>
+</html>

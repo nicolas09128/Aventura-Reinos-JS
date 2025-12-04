@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: js/mercado.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: js/mercado.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Producto } from './producto.js';
+export class Mercado {
+    
+    /**
+     * Crea un nuevo mercado con una lista de productos.
+     */
+    listaProductos = [
+        new Producto("Espada Basica", 500, "Comun", "arma", { ataque: 5 }),
+        new Producto("Espada Normal", 1000, "Rara", "arma", { ataque: 10 }),
+        new Producto("Armadura Ligera", 750, "Rara", "armadura", { defensa: 10 }),
+        new Producto("Pocion de vida", 200, "Comun", "consumible", { curacion: 50 }),
+        new Producto("Revivir", 400, "Raro", "consumible", { curacion: 100 }),
+        new Producto("Hacha", 1200, "Epico", "arma", { ataque: 15 }),
+        new Producto("Escudo Antiguo", 900, "Epico", "armadura", { defensa: 20 }),
+        new Producto("Escudo Legendario", 2000, "Legendario", "armadura", { defensa: 40 })
+    ];
+
+    /**
+     * Filtrar productos por rareza
+     * @param rareza Rareza por la que filtrar 
+     * @returns Lista de productos que coinciden con la rareza indicada
+     */
+    filtrarPorRareza(rareza) {
+        var result = [];
+        for (var i = 0; i &lt; this.listaProductos.length; i++) {
+            var producto = this.listaProductos[i];
+            if (producto &amp;&amp; producto.rareza === rareza) result.push(producto);
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param rareza Rareza por la que filtrar
+     * @param porcentaje Porcentaje de descuento a aplicar
+     * @returns Lista de productos con el descuento aplicado
+     */
+    aplicarDescuento(rareza, porcentaje) {
+        for (var i = 0; i &lt; this.listaProductos.length; i++) {
+            var producto = this.listaProductos[i];
+            if (producto &amp;&amp; producto.rareza === rareza) {
+                producto.aplicarDescuento(porcentaje);
+            }
+        }
+        return this.listaProductos;
+    }
+
+    /**
+     * 
+     * @param nombre Nombre del producto a buscar
+     * @returns Producto que coincide con el nombre indicado o undefined si no se encuentra
+     */
+    buscarProducto(nombre) {
+        for (var i = 0; i &lt; this.listaProductos.length; i++) {
+            var producto = this.listaProductos[i];
+            if (producto &amp;&amp; producto.nombre === nombre) return producto;
+        }
+        return undefined;
+    }
+
+    /**
+     * 
+     * @returns Descripción de todos los productos en el mercado
+     */
+    mostrarProducto() {
+        var lines = [];
+        for (var i = 0; i &lt; this.listaProductos.length; i++) {
+            var prod = this.listaProductos[i];
+            if (prod &amp;&amp; typeof prod.presentar === 'function') lines.push(prod.presentar());
+        }
+        return lines.join('\n');
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Jugadores.html">Jugadores</a></li><li><a href="Producto_Producto.html">Producto</a></li></ul><h3>Global</h3><ul><li><a href="global.html#applyRandomDiscount20">applyRandomDiscount20</a></li><li><a href="global.html#batalla">batalla</a></li><li><a href="global.html#canAffordProduct">canAffordProduct</a></li><li><a href="global.html#categorizePlayers">categorizePlayers</a></li><li><a href="global.html#fight">fight</a></li><li><a href="global.html#getEnemyImage">getEnemyImage</a></li><li><a href="global.html#getProductImage">getProductImage</a></li><li><a href="global.html#initializeInventory">initializeInventory</a></li><li><a href="global.html#initializeShop">initializeShop</a></li><li><a href="global.html#launchPoopEmojis">launchPoopEmojis</a></li><li><a href="global.html#loadNextEnemy">loadNextEnemy</a></li><li><a href="global.html#mostrarRanking">mostrarRanking</a></li><li><a href="global.html#mostrarReporteCompleto">mostrarReporteCompleto</a></li><li><a href="global.html#populateEnemySelector">populateEnemySelector</a></li><li><a href="global.html#processPurchase">processPurchase</a></li><li><a href="global.html#resetSelection">resetSelection</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setBattleEnemy">setBattleEnemy</a></li><li><a href="global.html#showScene">showScene</a></li><li><a href="global.html#startBattleSequence">startBattleSequence</a></li><li><a href="global.html#toggleProductSelection">toggleProductSelection</a></li><li><a href="global.html#updateInventoryDisplay">updateInventoryDisplay</a></li><li><a href="global.html#updateInventoryInContainer">updateInventoryInContainer</a></li><li><a href="global.html#updateUI">updateUI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 11:05:54 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
