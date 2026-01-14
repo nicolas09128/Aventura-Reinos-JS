@@ -20,7 +20,7 @@
 }
 
 body {
-    background-image: url('/img/fondo.png');
+    background-image: url('img/fondo.png');
     color: white;
     min-height: 100vh;
     display: flex;
