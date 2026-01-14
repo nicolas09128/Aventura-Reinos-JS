@@ -8,6 +8,8 @@ export class Jugadores {
     puntos = 0;
     vida = 100;
     vidaMaxima = 100;
+    nivelataque = 0;
+    defensa = 0;
     inventario = [];
     dinero = 0;
     constructor(nombre) {
@@ -15,6 +17,8 @@ export class Jugadores {
         this.puntos = 0;
         this.vida = this.vidaMaxima;
         this.vidaMaxima = 100;
+        this.nivelataque = 0;
+        this.defensa = 0;
         this.inventario = [];
         this.dinero = 0;
         
@@ -25,8 +29,6 @@ export class Jugadores {
      * @param {Object} objeto - Objeto del mercado (nombre, tipo, bonus, etc.)
      */
     anadirObjeto(objeto) {
-        // SPREAD OPERATOR: {...objeto} crea una COPIA del objeto (no la referencia original)
-        // Esto evita que cambios posteriores al objeto afecten al inventario
         const objetoClone = {
             ...objeto
         };
@@ -45,11 +47,11 @@ export class Jugadores {
     }
 
     /**
-     * Calcula y devuelve el ataque total del jugador sumando todas las armas.
+     * Calcula y devuelve el ataque total del jugador sumando el ataque base más todas las armas.
      * @returns {number} Valor total de ataque.
      */
     ataqueTotal() {
-        var miAtaque = 0;
+        var miAtaque = this.nivelataque || 0;
         for (var i = 0; i < this.inventario.length; i++) {
             var objeto = this.inventario[i];
             if (!objeto) continue;
@@ -66,11 +68,11 @@ export class Jugadores {
     }
 
     /**
-     * Calcula y devuelve la defensa total del jugador sumando todas las armaduras.
+     * Calcula y devuelve la defensa total del jugador sumando la defensa base más todas las armaduras.
      * @returns {number} Valor total de defensa.
      */
     defensaTotal() {
-        var miDefensa = 0;
+        var miDefensa = this.defensa || 0;
         for (var i = 0; i < this.inventario.length; i++) {
             var objeto = this.inventario[i];
             if (!objeto) continue;
@@ -92,17 +94,12 @@ export class Jugadores {
      * @returns {Object<string, Array>} Grupos de inventario por tipo.
      */
     inventarioPorTipo() {
-        // OBJETO VACÍO: {} sirve como contenedor para los grupos
         const grupos = {};
         
-        // Recorro cada objeto del inventario
         for (let objeto of this.inventario) {
-            // Si no existe todavía un grupo para este tipo, lo CREO como array vacío
             if (!grupos[objeto.tipo]) {
                 grupos[objeto.tipo] = [];
             }
-            // ACCESO DINÁMICO: grupos[objeto.tipo] accede a la propiedad con el nombre del tipo
-            // Ejemplo: grupos['arma'].push(objeto) => agrupa todas las armas en un array
             grupos[objeto.tipo].push(objeto);
         }
         

@@ -27,7 +27,7 @@ export class Producto {
     */
     presentar() {
         const precioFormateado = this.formatearPrecio();
-        // Formatear bonus como lista legible
+       
         let bonusText = '';
         if (this.bonus && typeof this.bonus === 'object') {
             const parts = [];
@@ -49,7 +49,7 @@ export class Producto {
     * @returns Precio formateado en euros.
     */
     formatearPrecio() {
-        // `this.precio` está en céntimos; convertir a euros
+        
         return (this.precio / 100).toFixed(2) + "€";
     }
 
@@ -59,11 +59,9 @@ export class Producto {
     * @returns Nuevo precio tras aplicar el descuento.
     */
     aplicarDescuento(porcentaje) {
-        // CLAMP: limita el porcentaje entre 0 y 100 (no puede ser negativo ni mayor a 100)
         if (porcentaje < 0) porcentaje = 0;
         if (porcentaje > 100) porcentaje = 100;
 
-        // MATH.ROUND: redondea el resultado para evitar decimales en céntimos
         const nuevoPrecio = this.precio * (1 - porcentaje / 100);
         this.precio = Math.round(nuevoPrecio);
         return this.precio;

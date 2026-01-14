@@ -15,11 +15,9 @@ export class Mercado {
         new Producto("Escudo Legendario", 400, "Legendario", "armadura", { defensa: 40 })
     ];
 
-    // Guardar precios originales para poder resetear descuentos
     preciosOriginales = [];
 
     constructor() {
-        // Almacenar precios originales de cada producto
         for (var i = 0; i < this.listaProductos.length; i++) {
             this.preciosOriginales[i] = this.listaProductos[i].precio;
         }

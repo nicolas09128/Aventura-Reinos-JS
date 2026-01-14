@@ -9,13 +9,11 @@ import { Enemigos, JefeFinal } from './enemigos.js';
  * @returns {{ganador:string, detalle:string}} Resultado con ganador y detalle de la pelea
  */
 function batalla(player, enemy) {
-	// INSTANCEOF: comprueba si una variable es instancia de una clase específica
-	// Valida que los argumentos sean del tipo correcto
+	
 	if (!player || !enemy) {
  		return { ganador: 'error', detalle: 'Faltan argumentos player o enemy' };
  	}
 
-	// Comprobación de tipos: verifica que sean instancias de las clases correctas
 	if (!(player instanceof Jugadores) || !(enemy instanceof Enemigos)) {
  		return { ganador: 'error', detalle: 'Los argumentos deben ser instancias de Jugadores y Enemigos' };
  	}
@@ -24,12 +22,11 @@ function batalla(player, enemy) {
 	const defensaJugador = player.defensaTotal();
 
 	const ataqueEnemigo = enemy.nivelataque || 0;
-	const defensaEnemigo = 0; // Los enemigos no tienen defensa en su clase
+	const defensaEnemigo = 0; 
 
 	const dañoJugador = Math.max(0, ataqueJugador - defensaEnemigo);
 	let dañoEnemigo = Math.max(0, ataqueEnemigo - defensaJugador);
 
-	// INSTANCEOF para casos especiales: si es un jefe final, multiplica el daño
 	if (enemy instanceof JefeFinal) {
 		dañoEnemigo *= enemy.multiplicardanio;
 	}
@@ -40,7 +37,6 @@ function batalla(player, enemy) {
 	let ganador;
 	let detalle = `Jugador(A:${ataqueJugador},D:${defensaJugador}) vs Enemigo(A:${ataqueEnemigo},D:${defensaEnemigo}) => DañoJugador=${dañoJugador}, DañoEnemigo=${dañoEnemigo}`;
 
-	// Contar consumibles disponibles (sin mutar inventario)
 	var potionsCount = 0;
 	var revivirCount = 0;
 	if (player && Array.isArray(player.inventario)) {
@@ -53,39 +49,31 @@ function batalla(player, enemy) {
 		}
 	}
 
-	// Calcula cuánta vida total puede recuperar el jugador
 	const totalHealAvailable = revivirCount * 100 + potionsCount * 50;
 
-	// Turnos necesarios para matar al enemigo (si dañoJugador==0 => Infinity)
-	// OPERADOR TERNARIO: calcula cuántos turnos se necesitan, o Infinity si no puede dañar
 	const turnsToKillEnemy = (dañoJugador > 0) ? Math.ceil(vidaEnemigoAntes / dañoJugador) : Infinity;
-	// Vida efectiva del jugador incluyendo curables
+	
 	const effectivePlayerLife = vidaJugadorAntes + totalHealAvailable;
-	// Turnos que tarda el enemigo en matar al jugador (incluso con curativos)
 	const turnsToDieWithAllHeals = (dañoEnemigo > 0) ? Math.ceil(effectivePlayerLife / dañoEnemigo) : Infinity;
 
-	// Si el jugador no puede infligir daño nunca, no podrá ganar
 	if (dañoJugador === 0) {
 		detalle += ` -- Resultado: GANA ENEMIGO (el jugador no puede infligir daño)`;
 		player.vida = Math.max(0, vidaJugadorAntes - dañoEnemigo);
 		return { ganador: 'enemy', detalle };
 	}
 
-	// Si con todos los curativos disponibles puede matar al enemigo antes de morir
 	if (turnsToKillEnemy <= turnsToDieWithAllHeals) {
-		// Simular combate real, consumiendo items sólo cuando se usen
 		var enemyLife = vidaEnemigoAntes;
 		var playerLife = vidaJugadorAntes;
 
 		while (enemyLife > 0 && playerLife > 0) {
-			// Turno del jugador
+			
 			enemyLife = enemyLife - dañoJugador;
 			if (enemyLife <= 0) break;
-			// Turno del enemigo
+			
 			playerLife = playerLife - dañoEnemigo;
 			if (playerLife > 0) continue;
 
-			// Si el jugador muere, intenta usar curativos
 			var consumed = false;
 			var idxRevivir = -1;
 			for (var i = 0; i < player.inventario.length; i++) {
@@ -117,9 +105,8 @@ function batalla(player, enemy) {
 			var dineroGanado = 5;
 			if (enemy && enemy.nombre) {
 				var ename = String(enemy.nombre).toLowerCase();
-				if (ename.indexOf('orco') !== -1) puntosGanados = 60, dineroGanado = 5;
-				else if (ename.indexOf('demonio') !== -1) puntosGanados = 10;
-				else if (ename.indexOf('drag') !== -1 || ename.indexOf('dragon') !== -1 || ename.indexOf('dragón') !== -1) puntosGanados = 200, dineroGanado = 10;
+				
+				if (ename.indexOf('drag') !== -1 || ename.indexOf('dragon') !== -1 || ename.indexOf('dragón') !== -1) puntosGanados = 200, dineroGanado = 10;
 			}
 			if (typeof player.sumarPuntos === 'function') player.sumarPuntos(puntosGanados);
 			else player.puntos = (player.puntos || 0) + puntosGanados;
@@ -132,7 +119,6 @@ function batalla(player, enemy) {
 			return { ganador, detalle };
 		}
 
-		// Si llegó aquí, no pudo vencer aunque consumiendo
 		player.vida = Math.max(0, playerLife);
 		if (typeof enemy.puntosvida !== 'undefined') enemy.puntosvida = Math.max(0, enemyLife);
 		ganador = (player.vida > 0) ? 'draw' : 'enemy';
@@ -140,7 +126,6 @@ function batalla(player, enemy) {
 		return { ganador, detalle };
 	}
 
-	// Si con todos los curativos aun así muere antes de poder matar -> pierde
 	detalle += ` -- Resultado: GANA ENEMIGO (no puede matar al enemigo antes de morir, incluso consumiendo ítems)`;
 	player.vida = Math.max(0, vidaJugadorAntes - dañoEnemigo);
 	return { ganador: 'enemy', detalle };
@@ -181,7 +166,6 @@ function mostrarRanking(players = []) {
 		console.error('mostrarRanking: se esperaba un array de jugadores');
 		return [];
 	}
-	// Crear copia y ordenar
 	var copia = players.slice();
 	copia.sort(function(a, b) { return ((b.puntos || 0) - (a.puntos || 0)); });
 
@@ -209,7 +193,7 @@ function mostrarRanking(players = []) {
  * @returns {{rondas:number, ranking:Array<Object>}} Resumen con número de rondas y ranking final ordenado por puntos.
  */
 function mostrarReporteCompleto(rounds = [], players = []) {
-	// 1) Mostrar combates por ronda
+	
 	for (var r = 0; r < rounds.length; r++) {
 		var ronda = rounds[r];
 		console.log('\n\u2694\ufe0f RONDA ' + (r + 1));
@@ -228,7 +212,6 @@ function mostrarReporteCompleto(rounds = [], players = []) {
 		}
 	}
 
-	// 2) Clasificación por nivel
 	var categorias = categorizePlayers(players);
 	var pros = [];
 	var rookies = [];
@@ -241,7 +224,6 @@ function mostrarReporteCompleto(rounds = [], players = []) {
 	console.log(' - PRO: ' + (pros.join(', ') || '---'));
 	console.log(' - ROOKIE: ' + (rookies.join(', ') || '---'));
 
-	// 3) Ranking final detallado
 	console.log('\n\u{1F3C6} RANKING FINAL \u{1F3C6}');
 	var ordenados = players.slice();
 	ordenados.sort(function(a, b) { return ((b.puntos || 0) - (a.puntos || 0)); });
@@ -277,5 +259,4 @@ function mostrarReporteCompleto(rounds = [], players = []) {
 	return { rondas: rounds.length, ranking: ordenados };
 }
 
-// Funciones disponibles globalmente
 export { batalla, categorizePlayers, mostrarRanking, mostrarReporteCompleto };

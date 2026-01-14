@@ -20,18 +20,17 @@
 }
 
 body {
-    background: var(--bg-gradient);
+    background-image: url('/img/fondo.png');
     color: white;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-/* Evitar scroll horizontal en los anchos comprobados (360/720/1024) */
 html, body { overflow-x: hidden; }
 
 header {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.85);
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -39,7 +38,7 @@ header {
 
 #title {
     font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
     color: #ffcc00;
 }
 
@@ -54,15 +53,24 @@ main {
 .scene {
     width: 100%;
     max-width: 900px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.85);
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     display: none;
 }
 
-/* Mejor rendimiento: usar transform/opacity en hover para evitar reflow */
-.product { position: relative; }
+#scene-5 {
+    max-width: 100%;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    border-radius: 0;
+    padding: 20px;
+}
+
+.product { 
+    position: relative; 
+}
 .product:hover {
     transform: translateY(-6px) scale(1.01);
     border-color: var(--accent);
@@ -78,7 +86,6 @@ main {
 .btn { transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast); will-change: transform; }
 .btn:hover { transform: translateY(-3px) scale(1.02); }
 
-/* Animación al añadir al carrito: icono temporal con animación */
 .product.added::after {
     content: '\2713';
     position: absolute;
@@ -96,19 +103,56 @@ main {
     40% { transform: scale(1.15); opacity: 1; }
     100% { transform: translateY(-16px) scale(1); opacity: 0; }
 }
+.inventory-and-purse-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    position: relative;
+}
 
-/* Slide-in para batalla (entrada desde fuera de pantalla) */
-@keyframes slideInLeft {
+#monedero-entrada{
+    width: 100px;
+    position: absolute;
+    left: 20px;
+    top: 37px;
+    margin-left: 0;
+    margin-bottom: 1%;
+    flex-shrink: 0;
+}
+
+.row-4 {
+    display: flex;
+    justify-content: center;
+}
+#monedero-image{
+    width: 100%;
+    margin-bottom: -70px;
+}
+#monedero{
+    text-align: center;
+    margin-bottom: 26px;
+}
+@keyframes desdeIzquierda {
     from { transform: translateX(-120%); opacity: 0; }
     to   { transform: translateX(0); opacity: 1; }
 }
-@keyframes slideInRight {
-    from { transform: translateX(120%); opacity: 0; }
+@keyframes slideInLef {
+    from { transform: translateX(-120px); opacity: 1; }
     to   { transform: translateX(0); opacity: 1; }
 }
-.slide-in-left { animation: slideInLeft 700ms cubic-bezier(.2,.9,.2,1) forwards; }
-.slide-in-right { animation: slideInRight 700ms cubic-bezier(.2,.9,.2,1) forwards; }
-
+@keyframes slideInLeft {
+    from { transform: translateX(120vw); opacity: 1; }
+    to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInRight {
+    from { transform: translateX(-120vw); opacity: 1; }
+    to   { transform: translateX(0); opacity: 1; }
+}
+.slide-in-left { animation: slideInLeft 2s cubic-bezier(.2,.9,.2,1) forwards; }
+.slide-in-right { animation: slideInRight 2s cubic-bezier(.2,.9,.2,1) forwards; }
+.slide-in-lef {animation: slideInLef 2s cubic-bezier(.2,.9,.2,1) forwards; }
 #scene-1 {
     display: block;
 }
@@ -118,12 +162,11 @@ main {
     font-size: 2rem;
     margin-bottom: 30px;
     color: #ffcc00;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
     border-bottom: 2px solid #ffcc00;
     padding-bottom: 10px;
 }
 
-/* Estilos para las escenas de perfil */
 #scene-1-container, #scene-3-container {
     text-align: center;
 }
@@ -145,14 +188,13 @@ main {
 }
 
 .hero-image {
-    width: 180px !important;
-    height: 180px !important;
-    border: 4px solid var(--accent) !important;
-    border-radius: 15px !important;
-    box-shadow: 0 0 30px rgba(255, 204, 0, 0.5) !important;
+    width: 180px;
+    height: 180px;
+    border: 4px solid var(--accent) ;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.85);
     animation: floatImage 3s ease-in-out infinite;
 }
-
 @keyframes floatImage {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
@@ -162,7 +204,7 @@ main {
     font-size: 1.8rem;
     font-weight: bold;
     color: var(--accent);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
     margin-bottom: 20px;
 }
 
@@ -209,15 +251,15 @@ main {
 }
 
 .btn-hero {
-    background: linear-gradient(135deg, var(--accent), #ffaa00) !important;
-    color: #000 !important;
-    font-size: 1.3rem !important;
-    padding: 15px 50px !important;
-    font-weight: bold !important;
-    text-transform: uppercase !important;
+    background: linear-gradient(135deg, var(--accent), #ffaa00);
+    color: #000;
+    font-size: 1.3rem;
+    padding: 15px 50px;
+    font-weight: bold;
+    text-transform: uppercase;
     border: 3px solid #fff;
-    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.4) !important;
-    transition: all 0.3s ease !important;
+    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.4);
+    transition: all 0.3s ease;
 }
 
 .row-4 h3 {
@@ -226,7 +268,6 @@ main {
     font-size: 1.5rem;
 }
 
-/* Estilos para la tienda */
 .shop-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -235,7 +276,6 @@ main {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    /* AÑADIDO: centrar items dentro de cada celda */
     justify-items: center;
 }
 
@@ -248,11 +288,9 @@ main {
     cursor: pointer;
     border: 2px solid transparent;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    /* CAMBIOS AQUÍ ----------------------- */
-    width: 100%;          /* Ocupa todo el espacio de la columna del grid */
-    max-width: 220px;     /* Evita que se vea demasiado grande. Ajusta a tu gusto */
-    margin: 0 auto;       /* Centra la tarjeta dentro de su celda */
-    /* ------------------------------------ */
+    width: 100%;         
+    max-width: 220px;   
+    margin: 0 auto;  
     min-height: 250px;
     display: flex;
     flex-direction: column;
@@ -260,7 +298,6 @@ main {
 }
 
 .product:hover {
-    /* rule replaced earlier for better performance; keep compatibility for specificity */
     transform: translateY(-6px) scale(1.01);
     border-color: var(--accent);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
@@ -274,15 +311,14 @@ main {
 
 .products-grid {
     display: grid;
-    /* Ajustes: evitar overflow en escritorio y mantener responsividad */
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 15px;
     width: 100%;
-    max-width: 800px; /* Coincide con el ancho máximo de la tienda para que no se salga */
+    max-width: 800px; 
     margin:  auto;
     margin-left: 30px;
-    padding: 0 10px; /* padding reducido y box-sizing por defecto para no provocar overflow */
-    justify-items: center; /* Centra las tarjetas en cada celda */
+    padding: 0 10px; 
+    justify-items: center; 
 }
 
 .product.disabled {
@@ -322,7 +358,7 @@ main {
     font-size: 1.5rem;
     margin: 20px 0;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.85);
     border-radius: 10px;
     border: 2px solid #ffcc00;
 }
@@ -382,15 +418,14 @@ main {
     box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
 }
 
-/* Estilos para el inventario */
-#inventory-container, #battle-inventory-container {
+#inventory-container {
     display: flex;
-    justify-content: center;
     gap: 15px;
     flex-wrap: wrap;
     margin-top: 15px;
+
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.85);
     border-radius: 10px;
     border: 2px solid rgba(255, 204, 0, 0.3);
 }
@@ -436,7 +471,6 @@ main {
     border: 2px dashed rgba(255, 255, 255, 0.15);
 }
 
-/* Estilos para el selector de enemigos */
 .enemy-selector {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -497,7 +531,6 @@ main {
     line-height: 1.4;
 }
 
-/* Estilos para la batalla */
 #battle-area {
     display: flex;
     gap: 20px;
@@ -512,12 +545,22 @@ main {
 }
 
 #player-battle img, #enemy-battle img {
-    width: 150px;
-    height: 150px;
+    width: 300px;
+    height: 300px;
     object-fit: cover;
     border-radius: 10px;
     border: 3px solid #ffcc00;
     margin-bottom: 10px;
+}
+#player-name-battle, #enemy-name-battle{
+    font-size: 25px;
+}
+#player-image-battle {
+    transform: translateX(120vw);
+}
+
+#enemy-image-battle {
+    transform: translateX(-120vw);
 }
 
 #battle-center {
@@ -529,7 +572,6 @@ main {
     margin-top: 10px;
 }
 
-/* Estilos para la escena final */
 #scene-6 {
     text-align: center;
 }
@@ -548,7 +590,7 @@ main {
 @media (max-width: 768px) {
     .shop-container, .products-grid {
         grid-template-columns: 1fr;
-        gap: 15px; /* Un poco menos de espacio entre items en móviles */
+        gap: 15px; 
     }
     
     .enemy-selector {
@@ -602,5 +644,182 @@ main {
     
     #title {
         font-size: 1.5rem;
+    }
+}
+
+#scene-0-container {
+    text-align: center;
+}
+
+.form-group {
+    background: rgba(255, 204, 0, 0.05);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 204, 0, 0.2);
+    margin: 10px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid rgba(255, 204, 0, 0.3);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 1rem;
+    transition: all 200ms ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.error-text {
+    display: block;
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+#scene-0 .row-2 {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.ranking-table-container {
+    overflow-x: auto;
+    margin: 30px 0;
+}
+
+.ranking-table-container.ranking-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.ranking-table-container.ranking-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.ranking-table-container.ranking-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 204, 0, 0.1);
+    border-radius: 10px;
+}
+
+.ranking-table-container.ranking-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 204, 0, 0.5);
+    border-radius: 10px;
+}
+
+.ranking-table-container.ranking-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.ranking-table thead {
+    background: linear-gradient(135deg, rgba(255, 204, 0, 0.3), rgba(255, 204, 0, 0.1));
+    border-bottom: 3px solid var(--accent);
+}
+
+.ranking-table th {
+    padding: 15px 20px;
+    text-align: left;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ranking-table tbody tr {
+    border-bottom: 1px solid rgba(255, 204, 0, 0.1);
+    transition: all 200ms ease;
+}
+
+.ranking-table tbody tr:hover {
+    background: rgba(255, 204, 0, 0.1);
+    transform: scale(1.02);
+}
+
+.ranking-table td {
+    padding: 15px 20px;
+    color: white;
+}
+
+.ranking-table tbody tr:nth-child(1) {
+    background: rgba(255, 204, 0, 0.15);
+}
+
+.ranking-table tbody tr:nth-child(1) td:first-child {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.ranking-table tbody tr:nth-child(2) td:first-child {
+    color: #c0c0c0;
+    font-weight: bold;
+}
+
+.ranking-table tbody tr:nth-child(3) td:first-child {
+    color: #cd7f32;
+    font-weight: bold;
+}
+
+#scene-7 {
+    text-align: center;
+}
+
+
+.moneda {
+    position: fixed;
+    top: -100px; 
+    width: 60px;  
+    height: 60px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 9999;
+ 
+    animation: caerYRotar 3s linear forwards;
+}
+
+@keyframes caerYRotar {
+    0% {
+        top: -100px;
+        transform: rotateY(0deg);
+        opacity: 1;
+    }
+    70% {
+        opacity: 1; 
+    }
+    100% {
+        top: 50vh; 
+        transform: rotateY(720deg); 
+        opacity: 0; 
     }
 }

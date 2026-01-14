@@ -1,9 +1,9 @@
-// Las clases ya están disponibles globalmente (cargadas por etiquetas <script> en el HTML)
+
 import { Enemigos, JefeFinal } from './js/enemigos.js';
 import { Jugadores } from './js/Jugadores.js';
 import { Mercado } from './js/mercado.js';
 import { batalla, categorizePlayers, mostrarRanking, mostrarReporteCompleto } from './js/Ranking.js';
-// Crear instancia del mercado
+
 const mercado = new Mercado();
 
 /**
@@ -17,7 +17,6 @@ function getProductImage(producto) {
     const name = (producto.nombre || '').toLowerCase();
     const tipo = (producto.tipo || '').toLowerCase();
 
-    // Mapeos por nombre (casos específicos según archivos en /img)
     if (name.includes('espada')) return './img/espada.png';
     if (name.includes('hacha')) return './img/hacha.png';
     if (name.includes('escudo') || name.includes('escudo antiguo')) return './img/escudo.png';
@@ -25,16 +24,13 @@ function getProductImage(producto) {
     if (name.includes('pocion')) return './img/Pocion.png';
     if (name.includes('revivir')) return './img/revivir.png';
 
-    // Mapeos por tipo
     if (tipo === 'arma') return './img/espada.png';
     if (tipo === 'armadura') return './img/armadura.png';
     if (tipo === 'consumible') return './img/Pocion.png';
 
-    // Fallback genérico
     return './img/p1.png';
 }
 
-// Productos en formato de tienda. Se construyen desde el mercado.
 var products = [];
 function rebuildProductsFromMercado() {
     products = [];
@@ -68,7 +64,6 @@ function applyRandomDiscount20() {
     var producto = items[idx];
     producto.aplicarDescuento(20);
 
-    // Reconstruir productos y UI
     rebuildProductsFromMercado();
     initializeShop();
     updateUI();
@@ -80,7 +75,6 @@ function applyRandomDiscount20() {
     }
 }
 
-// Estado del juego
 var dineros = 500;
 var gameState = {
     money: dineros,
@@ -88,21 +82,19 @@ var gameState = {
     purchasedProducts: [],
 };
 
-// Estado del jugador
 const player = new Jugadores('Atreus');
 
-// Enemigos (crear 5 enemigos)
 var enemies = [
     new Enemigos('Enemigo', 'Goblin', 20, 50),
     new Enemigos('Enemigo', 'Lobo', 30, 60),
     new Enemigos('Enemigo', 'Orco', 40, 80),
-    new Enemigos('Enemigo', 'Demonio', 60, 100),
-    new JefeFinal('Dragón', 55, 120, 'Llamarada', 2.0)
+    new Enemigos('Enemigo', 'Demonio', 40, 90),
+    new JefeFinal('Dragón', 55, 100, 'Llamarada', 2.0)
 ];
 
 let selectedEnemy = null;
-let enemiesQueue = []; // Cola de 3 enemigos aleatorios
-let currentEnemyIndex = 0; // Índice del enemigo actual (1, 2, 3)
+let enemiesQueue = []; 
+let currentEnemyIndex = 0;
 
 /**
  * Muestra la escena indicada ocultando las demás. Reinicia animaciones
@@ -115,19 +107,36 @@ function showScene(id) {
     for (var i = 0; i < scenes.length; i++) {
         scenes[i].style.display = 'none';
     }
-    
-    // Mostrar la escena solicitada
+   
+    if (id === 'scene-0') {
+        const nameInput = document.getElementById('player-name-input');
+        const atkInput = document.getElementById('player-attack');
+        const defInput = document.getElementById('player-defense');
+        const lifeInput = document.getElementById('player-life');
+        if (nameInput) nameInput.value = '';
+        if (atkInput) atkInput.value = '';
+        if (defInput) defInput.value = '';
+        if (lifeInput) lifeInput.value = '100';
+    }
+    if (id === 'monedero-entrada') {
+            const mImg = document.getElementById('monedero-image');
+            if(mImg) {
+                mImg.classList.remove('slide-in-left');
+                 void pImg.offsetWidth;
+            }
+        }
+
     const el = document.getElementById(id);
     if (el) {
         el.style.display = 'block';
-
-        // Si es la escena de batalla, aplicar slide-in a las imágenes
+        
+       
         if (id === 'scene-5') {
             const pImg = document.getElementById('player-image-battle');
             const eImg = document.getElementById('enemy-image-battle');
             if (pImg) {
                 pImg.classList.remove('slide-in-left');
-                void pImg.offsetWidth; // force reflow to restart animation
+                void pImg.offsetWidth; 
                 pImg.classList.add('slide-in-left');
             }
             if (eImg) {
@@ -137,10 +146,9 @@ function showScene(id) {
             }
         }
 
-        // Si es la escena final, lanzar confetti o emoji según categoría
         if (id === 'scene-6' && typeof confetti === 'function') {
             var puntos = player.puntos || 0;
-            var categoria = puntos >= 100 ? 'pro' : 'rookie';
+            var categoria = puntos >= 90 ? 'pro' : 'rookie';
             if (categoria === 'rookie') {
                 launchPoopEmojis();
             } else {
@@ -152,13 +160,50 @@ function showScene(id) {
     }
 }
 
-// Inicialización
 window.addEventListener('load', () => {
-    // Inicializar componentes
+   
     initializeShop();
     initializeInventory();
     updateUI();
 
+const playerCreationForm = document.getElementById('player-creation-form');
+
+if (playerCreationForm) {
+    playerCreationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        let nombre = document.getElementById('player-name-input').value.trim();
+        const ataque = parseInt(document.getElementById('player-attack').value) || 0;
+        const defensa = parseInt(document.getElementById('player-defense').value) || 0;
+        const vida = parseInt(document.getElementById('player-life').value) || 0;
+        
+        let errores = [];
+
+        if (nombre === ""){ nombre = "Atreus";}
+        if (ataque < 0) errores.push("El ataque no puede ser negativo.");
+        if (defensa < 0) errores.push("La defensa no puede ser negativa.");
+        if (vida < 100) errores.push("La vida mínima debe ser 100.");
+
+        const totalStats = ataque + defensa + vida;
+        if (totalStats > 110) {
+            errores.push(`El total de estadísticas (${totalStats}) excede el límite de 110.`);
+        }
+
+        if (errores.length > 0) {
+            alert("Errores:\n- " + errores.join("\n- "));
+            return; 
+        }
+
+        player.nombre = nombre;
+        player.nivelataque = ataque;
+        player.defensa = defensa;
+        player.vida = vida;
+        player.vidaMaxima = vida;
+        
+        updateStatsDisplay();
+        showScene('scene-1');
+    });
+}
 
     var toShopBtn = document.getElementById('to-shop-btn');
     if (toShopBtn) {
@@ -190,9 +235,17 @@ window.addEventListener('load', () => {
             showScene('scene-3');
         });
     }
+    
     document.getElementById('restart-btn').addEventListener('click', restartGame);
-
-    showScene('scene-1');
+    document.getElementById('restart-ranking-btn').addEventListener('click', restartGame);
+    var tablaBtn = document.getElementById('tabla-btn');
+    if (tablaBtn) {
+        tablaBtn.onclick = function() {
+            cargarRanking();
+            showScene('scene-7');
+        }
+    }
+    showScene('scene-0');
     updateStatsDisplay();
 });
 
@@ -204,7 +257,6 @@ function initializeShop() {
     const shopContainer = document.getElementById('shop-container');
     shopContainer.innerHTML = '';
 
-    // Contenedor para los productos
     const productsGrid = document.createElement('div');
     productsGrid.className = 'products-grid';
     
@@ -218,7 +270,6 @@ function initializeShop() {
             productElement.dataset.id = product.id;
             productElement.dataset.price = product.price;
 
-            // Construir HTML del producto
             var bonusHtml = '';
             if (product.bonus && typeof product.bonus === 'object') {
                 for (var k in product.bonus) {
@@ -241,7 +292,6 @@ function initializeShop() {
                 '<button class="btn add-btn">' + btnText + '</button>' +
                 '</div>';
 
-            // boton de añadir/retirar
             (function(prod, elem){
                 var btn = elem.querySelector('.add-btn');
                 if (btn) {
@@ -267,7 +317,6 @@ function initializeShop() {
         }
     }
 
-    // Mostrar todos los productos
     shopContainer.appendChild(productsGrid);
     displayProducts(products);
 }
@@ -292,12 +341,10 @@ function initializeInventory() {
  * @param {number} productId - ID del producto a alternar
  */
 function toggleProductSelection(productId) {
-    // QUERYSELECTOR: selecciona un elemento HTML usando un selector CSS
     const productElement = document.querySelector(`.product[data-id="${productId}"]`);
     const product = products.find(p => p.id === productId);
     if (!productElement) return;
 
-    // Alternar selección: si ya está seleccionado, lo deselecciona
     var idx = gameState.selectedProducts.indexOf(productId);
     if (idx !== -1) {
         gameState.selectedProducts.splice(idx, 1);
@@ -336,8 +383,6 @@ function canAffordProduct(price) {
  * Llama a funciones auxiliares para mantener la UI sincronizada con `gameState`.
  */
 function updateUI() {
-    document.getElementById('money-amount').textContent = `${(gameState.money).toFixed(2)}€`;
-    // Calcular total seleccionado
     var totalSelectedPrice = 0;
     for (var i = 0; i < gameState.selectedProducts.length; i++) {
         var sid = gameState.selectedProducts[i];
@@ -348,6 +393,9 @@ function updateUI() {
             }
         }
     }
+    
+    var dineroDisponible = gameState.money - totalSelectedPrice;
+    document.getElementById('money-amount').textContent = `${(dineroDisponible).toFixed(2)}€`;
 
     for (var p = 0; p < products.length; p++) {
         var product = products[p];
@@ -385,11 +433,7 @@ function resetSelection() {
  */
 function processPurchase() {
     if (gameState.selectedProducts.length === 0) return;
-    // // Preguntar confirmación
-    // if (!confirm("¿Seguro que quieres comprar?")) {
-    //     return; // El usuario dijo NO
-    // }
-    // REDUCE: suma todos los precios seleccionados
+
     const totalPrice = gameState.selectedProducts.reduce((total, id) => {
         const product = products.find(p => p.id === id);
         return total + (product ? product.price : 0);
@@ -399,7 +443,6 @@ function processPurchase() {
     
     gameState.money -= totalPrice;
     
-    // Añadir productos al inventario del jugador usando el producto original
     gameState.selectedProducts.forEach(id => {
         const product = products.find(p => p.id === id);
         if (product && product.productoOriginal) {
@@ -435,7 +478,6 @@ function updateInventoryDisplay() {
 function updateInventoryInContainer(container) {
     if (!container) return;
 
-    // Si no hay objetos, mostramos 8 casillas vacías
     if (!player.inventario || player.inventario.length === 0) {
         container.innerHTML = '';
         for (let i = 0; i < 8; i++) {
@@ -447,10 +489,8 @@ function updateInventoryInContainer(container) {
         return;
     }
 
-    // Si hay objetos, los mostramos solo con imagen
     container.innerHTML = '';
 
-    // FOREACH: itera sobre cada item del inventario
     player.inventario.forEach((item, index) => {
         const itemSlot = document.createElement('div');
         itemSlot.className = 'item inventory-item';
@@ -466,7 +506,7 @@ function updateInventoryInContainer(container) {
 }
 
 function updateStatsDisplay() {
-    // No dependemos de un contenedor específico: actualizamos los elementos disponibles en la UI
+    
     const stats = player.mostrar();
 
     const statsContainer = document.getElementById('player-stats');
@@ -496,35 +536,41 @@ function updateStatsDisplay() {
         `;
     }
 
-    // Actualizar spans individuales en las escenas (si existen)
     const atk1 = document.getElementById('stat-attack-1');
     const def1 = document.getElementById('stat-defense-1');
     const life1 = document.getElementById('stat-life-1');
     const pts1 = document.getElementById('stat-points-1');
     const dn1 = document.getElementById('stat-dinero-1');
+    const playerNameEl1 = document.getElementById('player-name-scene1');
+    const playerNameEl3 = document.getElementById('player-name-scene3');
     const atk3 = document.getElementById('stat-attack-3');
     const def3 = document.getElementById('stat-defense-3');
     const life3 = document.getElementById('stat-life-3');
     const pts3 = document.getElementById('stat-points-3');
     const dn3 = document.getElementById('stat-dinero-3')
-    if (atk1) atk1.textContent = stats.ataque;
-    if (def1) def1.textContent = stats.defensa;
+    if (playerNameEl1) playerNameEl1.textContent = player.nombre;
+    if (playerNameEl3) playerNameEl3.textContent = player.nombre;
+    if (atk1) atk1.textContent = player.nivelataque;
+    if (def1) def1.textContent = player.defensa;
     if (life1) life1.textContent = `${stats.vida}/${stats.vidaMaxima}`;
     if (pts1) pts1.textContent = stats.puntos;
-    if (dn3) dn3.textContent = gameState.money;
-    if (atk3) atk3.textContent = stats.ataque;
-    if (def3) def3.textContent = stats.defensa;
+    if (dn1) dn1.textContent = gameState.money;
+    if (atk3) atk3.textContent = player.ataqueTotal();
+    if (def3) def3.textContent = player.defensaTotal();
     if (life3) life3.textContent = `${stats.vida}/${stats.vidaMaxima}`;
     if (pts3) pts3.textContent = stats.puntos;
     if (dn3) dn3.textContent = stats.dinero + gameState.money;
-    // final info
+   
     const finalName = document.getElementById('final-player-name');
     const finalPoints = document.getElementById('final-points');
     const finalDinero = document.getElementById('final-dinero');
     if (finalName) finalName.textContent = player.nombre;
     if (finalPoints) finalPoints.textContent = player.puntos;
     if (finalDinero) finalDinero.textContent = stats.dinero + gameState.money;
-    // Mostrar categoría final (PRO / ROOKIE) en la escena final si existe el elemento
+    
+    const monederoDisplay = document.getElementById('monedero');
+    if (monederoDisplay) monederoDisplay.textContent = player.dinero + gameState.money;
+    
     const finalCategoryEl = document.getElementById('final-player-category');
     if (finalCategoryEl) {
         const puntos = player.puntos || 0;
@@ -540,14 +586,11 @@ function startBattleSequence() {
     enemiesQueue = [];
     currentEnemyIndex = 0;
     
-    // Seleccionar 3 enemigos aleatorios (pueden repetirse)
-    // FOR: bucle tradicional para llenar la cola de enemigos
     for (let i = 0; i < 3; i++) {
         const randomIdx = Math.floor(Math.random() * enemies.length);
         enemiesQueue.push(enemies[randomIdx]);
     }
     
-    // Mostrar el primer enemigo
     loadNextEnemy();
 }
 
@@ -556,7 +599,7 @@ function startBattleSequence() {
  */
 function loadNextEnemy() {
     if (currentEnemyIndex >= enemiesQueue.length) {
-        // Se acabaron los 3 enemigos, ir a escena final
+        guardarResultado();
         setTimeout(() => { 
             showScene('scene-6'); 
             updateStatsDisplay(); 
@@ -569,8 +612,9 @@ function loadNextEnemy() {
     showScene('scene-5');
     updateBattleCounter();
 }
-
-// Actualizar contador de enemigos
+/**
+ * Actualizar contador de enemigos
+ */
 function updateBattleCounter() {
     const counter = document.getElementById('battle-counter');
     if (counter) {
@@ -583,11 +627,9 @@ function updateBattleCounter() {
  * Es puramente informativa; la selección real de la cola de enemigos es aleatoria.
  */
 function populateEnemySelector() {
-    // GETELEMENTBYID: selecciona un elemento HTML por su id
     const selectorContainer = document.getElementById('enemy-selector');
     selectorContainer.innerHTML = '';
 
-    // FOREACH: itera sobre cada enemigo y crea su tarjeta visual
     enemies.forEach((enemy, index) => {
         const enemyCard = document.createElement('div');
         enemyCard.className = 'enemy-card';
@@ -643,11 +685,9 @@ function getEnemyImage(enemy) {
     if (name.includes('orco')) return './img/Orco.jpg';
     if (name.includes('demonio')) return './img/Demonio.jpg';
     if (name.includes('drag') || name.includes('dragón') || name.includes('dragon')) return './img/Dragon.jpg';
-    // fallback
     return './img/p1.png';
 }
 
-// Combate
 /**
  * Ejecuta un turno de combate contra el `selectedEnemy` usando la función `batalla`.
  * Muestra el resultado en la UI y avanza la cola de enemigos o finaliza la partida.
@@ -658,12 +698,11 @@ function fight() {
     
     const resultado = batalla(player, selectedEnemy);
     
-    const resultMessage = document.getElementById('battle-result'); // opcional
+    const resultMessage = document.getElementById('battle-result'); 
     const winnerElement = document.getElementById('battle-winner');
     const battlePointsEl = document.getElementById('battle-points');
     const dineroPoints = document.getElementById('battle-money');
 
-    // Mostrar resultado y ganador
     if (resultado.ganador === 'player') {
         if (resultMessage) {
             resultMessage.textContent = '¡Victoria! Has derrotado al enemigo';
@@ -672,7 +711,9 @@ function fight() {
         if (winnerElement) winnerElement.textContent = `Ganador: ${player.nombre}`;
         if (battlePointsEl) battlePointsEl.textContent = player.puntos || 0;
         if (dineroPoints) dineroPoints.textContent = player.dinero + gameState.money || 0;
-        // Desactivar botón de lucha y avanzar al siguiente enemigo
+       
+        lanzarMonedas();
+        
         document.getElementById('fight-btn').disabled = true;
         currentEnemyIndex++;
         
@@ -687,7 +728,9 @@ function fight() {
         }
         if (winnerElement) winnerElement.textContent = `Ganador: ${selectedEnemy.nombre}`;
         if (battlePointsEl) battlePointsEl.textContent = player.puntos || 0;
-        if (dineroPoints) dineroPoints.textContent = stats.dinero + gameState.money || 0;
+        if (dineroPoints) dineroPoints.textContent = gameState.money || 0;
+      
+        guardarResultado();
         setTimeout(() => { 
             showScene('scene-6'); 
             updateStatsDisplay(); 
@@ -700,8 +743,7 @@ function fight() {
         }
         if (winnerElement) winnerElement.textContent = 'Ganador: Empate';
         if (battlePointsEl) battlePointsEl.textContent = player.puntos || 0;
-        if (dineroPoints) dineroPoints.textContent = stats.dinero + gameState.money || 0;
-        // En caso de empate, avanzar al siguiente enemigo después de un tiempo
+        if (dineroPoints) dineroPoints.textContent = gameState.money || 0;
         document.getElementById('fight-btn').disabled = true;
         currentEnemyIndex++;
         
@@ -715,7 +757,25 @@ function fight() {
     updateStatsDisplay();
     document.getElementById('fight-btn').disabled = true;
 }
+function guardarResultado() {
+    let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+    ranking.push({
+        nombre: player.nombre,
+        puntos: player.puntos,
+        dinero: gameState.money
+    });
+    localStorage.setItem('ranking', JSON.stringify(ranking));
+}
 
+function cargarRanking() {
+    let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+    let tbody = document.querySelector('.ranking-table tbody');
+    tbody.innerHTML = '';
+    ranking.forEach((jugador, index) => {
+        let fila = tbody.insertRow();
+        fila.innerHTML = `<td>${index + 1}</td><td>${jugador.nombre}</td><td>${jugador.puntos}</td><td>${jugador.dinero}€</td>`;
+    });
+}
 /**
  * Reinicia el estado del juego a valores iniciales: dinero, inventario, puntos,
  * cola de enemigos y vuelve a la escena principal.
@@ -727,24 +787,45 @@ function restartGame() {
     gameState.purchasedProducts = [];
     
     player.puntos = 0;
+    player.dinero = 0;
     player.vida = player.vidaMaxima;
     player.inventario = [];
+    player.victorias = 0;
     
     selectedEnemy = null;
     enemiesQueue = [];
     currentEnemyIndex = 0;
 
-    // Resetear precios de productos (quita descuentos aplicados)
     mercado.resetearPrecios();
     rebuildProductsFromMercado();
 
     initializeShop();
     initializeInventory();
     updateUI();
-    showScene('scene-1');
+    updateStatsDisplay();
+    showScene('scene-0');
 }
 
-// Función para lanzar emoji de caca
+/**
+ * Lanza una animación de 3 monedas desde la parte superior de la pantalla.
+ * Las monedas descienden hasta la mitad de la pantalla, giran y se desvanecen.
+ * @returns {void}
+ */
+function lanzarMonedas() {
+  
+    const posiciones = [25, 50, 75];
+    const monedas = posiciones.map((posX, index) => {
+        return `<img src="./img/moneda.png" alt="moneda" class="moneda moneda-animacion" style="left: ${posX}%; animation-delay: ${index * 0.15}s;">`;
+    }).join('');
+    
+    document.body.insertAdjacentHTML('beforeend', monedas);
+    
+    setTimeout(() => {
+        const monedasElements = document.querySelectorAll('.moneda');
+        monedasElements.forEach(moneda => moneda.remove());
+    }, 3000);
+}
+
 /**
  * Crea y anima varios emojis (💩) que caen por la pantalla como efecto humorístico
  * usado en la escena final para jugadores 'rookie'. No devuelve nada.
@@ -753,7 +834,7 @@ function restartGame() {
 function launchPoopEmojis() {
     const container = document.body;
     const poopEmoji = '💩';
-    const duration = 3000; // 3 segundos
+    const duration = 3000; 
     const count = 30;
     
     for (let i = 0; i < count; i++) {
@@ -776,7 +857,6 @@ function launchPoopEmojis() {
     }
 }
 
-// Agregar animación CSS para el emoji cayendo
 const style = document.createElement('style');
 style.textContent = `
     @keyframes fallDown {
